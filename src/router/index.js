@@ -90,6 +90,15 @@ const router = new VueRouter({
 
     },
 
+    {
+      path: '/PersonCenter',
+      name: 'PersonCenter',
+      component: () => import('../views/userinfo/PersonCenter/PersonCenter.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
+
 
 
 
