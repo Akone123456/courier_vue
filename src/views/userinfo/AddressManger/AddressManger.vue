@@ -1,6 +1,6 @@
 <template>
   <div class="addressManger">
-    <h1>1123123</h1>
+
   </div>
 </template>
 
@@ -12,7 +12,9 @@ name: "AddressManger"
 
 <style scoped>
 .addressManger{
+  width: 900px;
+  height: auto;
   margin-left: 500px;
-  padding: 400px;
+  margin-top: 400px;
 }
 </style>

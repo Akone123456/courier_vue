@@ -22,7 +22,7 @@ export const exitUser = (query)=>{
  */
 export const changePwd = (query)=>{
     return axios.request({
-        url: '/center/user/updatepswd',
+        url: '/center/user/updatePswd',
         method:'post',
         data:query
     })

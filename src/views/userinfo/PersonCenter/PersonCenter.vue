@@ -157,7 +157,7 @@ export default {
       this.$refs[formName].validate((valid) =>{
         if(valid){
           let query = {
-            userId: this.ruleForm.id,
+            userId: this.ruleForm.userId,
             originalPassword:this.form.oldPassword,
             newPassword:this.form.newPassword,
             confirmPassword:this.form.checkPassword
