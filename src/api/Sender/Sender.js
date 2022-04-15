@@ -32,9 +32,9 @@ export const changePwd = (query)=>{
  * 获取信息
  * @returns {AxiosPromise}
  */
-export const getSender = ()=> {
+export const getSender = (query)=> {
     return axios.request({
-        url: '/center/sender/display',
+        url: '/center/sender/display/'+query,
         method: 'get'
     })
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="personCenter">
-    <el-card style="width: 600px;height: 600px" shadow="hover">
+    <el-card style="width: 600px;height: 400px" shadow="hover">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 <!--        <el-form-item label="头像" prop="avatarImg">-->
 <!--          <el-upload-->
@@ -14,17 +14,17 @@
 <!--          </el-upload>-->
 <!--        </el-form-item>-->
         <el-form-item label="账号" prop="username" style="width: 90%;">
-          <el-input v-model="ruleForm.username" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
+          <el-input v-model="ruleForm.userName" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" prop="phone" style="width: 90%;">
-          <el-input v-model="ruleForm.phone" clearable placeholder="手机号" prefix-icon="el-icon-tickets"></el-input>
-        </el-form-item>
-        <el-form-item label="简介" prop="note" style="width: 90%;">
-          <el-input v-model="ruleForm.note" clearable placeholder="简介" prefix-icon="el-icon-tickets"></el-input>
-        </el-form-item>
+<!--        <el-form-item label="手机号" prop="phone" style="width: 90%;">-->
+<!--          <el-input v-model="ruleForm.phone" clearable placeholder="手机号" prefix-icon="el-icon-tickets"></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="简介" prop="note" style="width: 90%;">-->
+<!--          <el-input v-model="ruleForm.note" clearable placeholder="简介" prefix-icon="el-icon-tickets"></el-input>-->
+<!--        </el-form-item>-->
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+<!--          <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>-->
+<!--          <el-button @click="resetForm('ruleForm')">重置</el-button>-->
           <el-button @click="dialogFormVisible=true">修改密码</el-button>
         </el-form-item>
       </el-form>
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import {exitUser,changePwd} from '../../../api/Consumer/Consumer'
+import {exitAdmin,changePwd,getAdmin} from '../../../api/Admin/Admin'
 export default {
   name: "AdminCenter",
   data(){
@@ -132,7 +132,7 @@ export default {
         // avatarImg:'',
         phone:'',
         photo:'',
-        username:''
+        userName:''
       },
       rules: {
         avatarImg: [
@@ -157,7 +157,7 @@ export default {
       this.$refs[formName].validate((valid) =>{
         if(valid){
           let query = {
-            userId: this.ruleForm.id,
+            userId: this.ruleForm.userId,
             originalPassword:this.form.oldPassword,
             newPassword:this.form.newPassword,
             confirmPassword:this.form.checkPassword
@@ -187,7 +187,7 @@ export default {
             photo:this.ruleForm.avatarImg,
             note:this.ruleForm.note
           }
-          exitUser(query).then(res=>{
+          exitAdmin(query).then(res=>{
             console.log(res)
             if(res.data.status === 0){
               this.$message.success("修改成功")
@@ -225,21 +225,30 @@ export default {
     },
     exitUserInfo(){
 
+    },
+    getAdm(id){
+      getAdmin(id).then(res=>{
+        console.log(res)
+        if(res.data.status === 0){
+          this.ruleForm = res.data.data
+        }
+      })
     }
   },
   mounted() {
     try{
       let lander=JSON.parse(localStorage.lander);
-      console.log(lander)
-      if (lander!=null) {
-        this.ruleForm.id=lander.id
-        this.ruleForm.phone=lander.phone
-        this.ruleForm.photo=lander.photo
-        this.ruleForm.username=lander.username
-        // this.ruleForm.avatarImg=lander.photo
-      }else {
-        this.$router.replace('userLogin');
-      }
+      this.getAdm(lander.id)
+      // console.log(lander)
+      // if (lander!=null) {
+      //   this.ruleForm.id=lander.id
+      //   this.ruleForm.phone=lander.phone
+      //   this.ruleForm.photo=lander.photo
+      //   this.ruleForm.username=lander.username
+      //   // this.ruleForm.avatarImg=lander.photo
+      // }else {
+      //   this.$router.replace('userLogin');
+      // }
     }catch(e){
       this.$router.replace('userLogin');
 

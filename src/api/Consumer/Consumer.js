@@ -22,7 +22,7 @@ export const exitUser = (query)=>{
  */
 export const changePwd = (query)=>{
     return axios.request({
-        url: '/center/user/updatePswd',
+        url: '/center/user/updatepswd',
         method:'post',
         data:query
     })
@@ -32,9 +32,9 @@ export const changePwd = (query)=>{
  * 获取信息
  * @returns {AxiosPromise}
  */
-export const getUser = ()=> {
+export const getUser = (query)=> {
     return axios.request({
-        url: 'center/user/display',
+        url: 'center/user/display/'+query,
         method: 'get'
     })
 }

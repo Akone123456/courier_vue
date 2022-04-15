@@ -13,14 +13,14 @@
 <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
 <!--          </el-upload>-->
 <!--        </el-form-item>-->
-        <el-form-item label="账号" prop="username" style="width: 90%;">
-          <el-input v-model="ruleForm.username" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
+        <el-form-item label="账号" prop="userName" style="width: 90%;">
+          <el-input v-model="ruleForm.userName" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone" style="width: 90%;">
           <el-input v-model="ruleForm.phone" clearable placeholder="手机号" prefix-icon="el-icon-tickets"></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名" prop="realname" style="width: 90%;">
-          <el-input v-model="ruleForm.realname" clearable placeholder="真实姓名" prefix-icon="el-icon-tickets"></el-input>
+        <el-form-item label="真实姓名" prop="realName" style="width: 90%;">
+          <el-input v-model="ruleForm.realName" clearable placeholder="真实姓名" disabled prefix-icon="el-icon-tickets"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="note" style="width: 90%;">
           <el-input v-model="ruleForm.note" clearable placeholder="简介" prefix-icon="el-icon-tickets"></el-input>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import {exitSender,changePwd} from '../../../api/Sender/Sender'
+import {exitSender,changePwd,getSender} from '../../../api/Sender/Sender'
 export default {
   name: "SenderCenter",
   data(){
@@ -118,7 +118,7 @@ export default {
       },
       rulesPass: {
         oldPassword: [
-          {required:true,validator: validateNewPass, trigger:'blur'}
+          {required:true,validator: validateNewPass, trigger:'blur'},
         ],
         newPassword: [
           {required:true,validator: validatePass, trigger: 'blur'}
@@ -136,7 +136,8 @@ export default {
         phone:'',
         // photo:'',
         username:'',
-        realname:''
+        realname:'',
+        note:''
       },
       rules: {
         avatarImg: [
@@ -152,50 +153,51 @@ export default {
       }
     }
   },
-  methods:{
-    exitPassword(formName){
+  methods: {
+    exitPassword(formName) {
       this.$refs[formName].resetFields();
       this.dialogFormVisible = false
     },
-    modifyPassword(formName){
-      this.$refs[formName].validate((valid) =>{
-        if(valid){
+    modifyPassword(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
           let query = {
-            userId: this.ruleForm.id,
-            originalPassword:this.form.oldPassword,
-            newPassword:this.form.newPassword,
-            confirmPassword:this.form.checkPassword
+            userId: this.ruleForm.userId,
+            originalPassword: this.form.oldPassword,
+            newPassword: this.form.newPassword,
+            confirmPassword: this.form.checkPassword
           }
           console.log(query)
-          changePwd(query).then(res=>{
-            if(res.data.status === 0){
+          changePwd(query).then(res => {
+            if (res.data.status === 0) {
               // 退出dialog，重置表单
               this.exitPassword(formName)
               this.$message.success(res.data.msg)
-            }else{
+            } else {
               this.$message.error(res.data.msg)
             }
           })
 
-        }else {
+        } else {
           return false
         }
       })
     },
-    submitForm(formName){
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let query = {
-            userId:this.ruleForm.id,
-            phone:this.ruleForm.phone,
-            photo:this.ruleForm.avatarImg,
-            note:this.ruleForm.note
+            userId: this.ruleForm.userId,
+            // realName:this.ruleForm.realname,
+            phone: this.ruleForm.phone,
+            photo: this.ruleForm.avatarImg,
+            note: this.ruleForm.note
           }
-          exitSender(query).then(res=>{
+          exitSender(query).then(res => {
             console.log(res)
-            if(res.data.status === 0){
+            if (res.data.status === 0) {
               this.$message.success("修改成功")
-            }else{
+            } else {
               this.$message.error("修改失败")
             }
           })
@@ -204,18 +206,18 @@ export default {
         }
       })
     },
-    resetForm(formName){
+    resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    handleAvatarSuccess(res){
-      if (res.status === 1){
-        this.ruleForm.avatarImg =process.env.VUE_APP_BASE_URL+ res.obj
+    handleAvatarSuccess(res) {
+      if (res.status === 1) {
+        this.ruleForm.avatarImg = process.env.VUE_APP_BASE_URL + res.obj
         this.$message.success(res.msg)
-      }else {
+      } else {
         this.$message.error(res.msg)
       }
     },
-    beforeAvatarUpload(file){
+    beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -227,25 +229,34 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    exitUserInfo(){
+    exitUserInfo() {
 
+    },
+    getSend(id) {
+      getSender(id).then(res => {
+        if (res.data.status === 0) {
+          console.log(res.data)
+          this.ruleForm = res.data.data
+        }
+      })
     }
   },
   mounted() {
     try{
       let lander=JSON.parse(localStorage.lander);
       console.log(lander)
-      if (lander!=null) {
-        this.ruleForm.id=lander.id
-        this.ruleForm.phone=lander.phone
-        this.ruleForm.note=lander.note
-        // this.ruleForm.photo=lander.photo
-        this.ruleForm.realname=lander.realname
-        this.ruleForm.username=lander.username
-        // this.ruleForm.avatarImg=lander.photo
-      }else {
-        this.$router.replace('userLogin');
-      }
+      this.getSend(lander.id)
+      // if (lander!=null) {
+      //   this.ruleForm.id=lander.id
+      //   this.ruleForm.phone=lander.phone
+      //   this.ruleForm.note=lander.note
+      //   // this.ruleForm.photo=lander.photo
+      //   this.ruleForm.realname=lander.realname
+      //   this.ruleForm.username=lander.username
+      //   // this.ruleForm.avatarImg=lander.photo
+      // }else {
+      //   this.$router.replace('userLogin');
+      // }
     }catch(e){
       this.$router.replace('userLogin');
 

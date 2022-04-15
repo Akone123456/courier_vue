@@ -33,9 +33,9 @@ export const changePwd = (query)=>{
  * 获取信息
  * @returns {AxiosPromise}
  */
-export const getAdmin = ()=> {
+export const getAdmin = (query)=> {
     return axios.request({
-        url: '/center/admin/display',
+        url: '/center/admin/display/'+query,
         method: 'get'
     })
 }

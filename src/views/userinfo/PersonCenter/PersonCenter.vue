@@ -9,7 +9,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
-            <img v-if="ruleForm.avatarImg" :src="ruleForm.avatarImg" class="avatar">
+            <img v-if="ruleForm.photo" :src="ruleForm.photo" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -227,24 +227,21 @@ export default {
     },
     exitUserInfo(){
 
+    },
+    getUserById(id){
+      getUser(id).then(res=>{
+        if (res.data.status){
+          console.log(res.data)
+          this.ruleForm = res.data.data
+        }
+      })
     }
   },
   mounted() {
-    getUser().then(res=>{
-      console.log(res.data)
-    })
     try{
       let lander=JSON.parse(localStorage.lander);
       console.log(lander)
-      if (lander!=null) {
-        this.ruleForm.id=lander.id
-        this.ruleForm.phone=lander.phone
-        this.ruleForm.photo=lander.photo
-        this.ruleForm.username=lander.username
-        this.ruleForm.avatarImg=lander.photo
-      }else {
-        this.$router.replace('userLogin');
-      }
+      this.getUserById(lander.id)
     }catch(e){
       this.$router.replace('userLogin');
 
