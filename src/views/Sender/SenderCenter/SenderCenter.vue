@@ -2,22 +2,25 @@
   <div class="personCenter">
     <el-card style="width: 600px;height: 600px" shadow="hover">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="头像" prop="avatarImg">
-          <el-upload
-              class="avatar-uploader"
-              action="http://localhost:8011/admin/userinfo/upimg"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-            <img v-if="ruleForm.avatarImg" :src="ruleForm.avatarImg" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
+<!--        <el-form-item label="头像" prop="avatarImg">-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              action="http://localhost:8011/admin/userinfo/upimg"-->
+<!--              :show-file-list="false"-->
+<!--              :on-success="handleAvatarSuccess"-->
+<!--              :before-upload="beforeAvatarUpload">-->
+<!--            <img v-if="ruleForm.avatarImg" :src="ruleForm.avatarImg" class="avatar">-->
+<!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--          </el-upload>-->
+<!--        </el-form-item>-->
         <el-form-item label="账号" prop="username" style="width: 90%;">
           <el-input v-model="ruleForm.username" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone" style="width: 90%;">
           <el-input v-model="ruleForm.phone" clearable placeholder="手机号" prefix-icon="el-icon-tickets"></el-input>
+        </el-form-item>
+        <el-form-item label="真实姓名" prop="realname" style="width: 90%;">
+          <el-input v-model="ruleForm.realname" clearable placeholder="真实姓名" prefix-icon="el-icon-tickets"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="note" style="width: 90%;">
           <el-input v-model="ruleForm.note" clearable placeholder="简介" prefix-icon="el-icon-tickets"></el-input>
@@ -25,7 +28,7 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
-          <el-button  @click="dialogFormVisible=true">修改密码</el-button>
+          <el-button @click="dialogFormVisible=true">修改密码</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -41,7 +44,7 @@
       <el-form :model="form"
                status-icon
                :rules="rulesPass"
-               ref="formPass"
+               ref="SenderformPass"
                label-width="100px"
                class="demo-ruleForm">
 
@@ -57,8 +60,8 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer" style="text-align: center;padding-top: 0">
-        <el-button @click="exitPassword('formPass')">退出</el-button>
-        <el-button type="primary" @click="modifyPassword('formPass')">修改</el-button>
+        <el-button @click="exitPassword('SenderformPass')">退出</el-button>
+        <el-button type="primary" @click="modifyPassword('SenderformPass')">修改</el-button>
       </div>
     </el-dialog>
 
@@ -66,9 +69,9 @@
 </template>
 
 <script>
-import {exitUser,changePwd,getUser} from '../../../api/Consumer/Consumer'
+import {exitSender,changePwd} from '../../../api/Sender/Sender'
 export default {
-  name: "PersonCenter",
+  name: "SenderCenter",
   data(){
     let validateNewPass = (rule , value , callback) =>{
       if (value === ''){
@@ -129,10 +132,11 @@ export default {
       formLabelWidth: '120px',
       ruleForm:{
         id:'',
-        avatarImg:'',
+        // avatarImg:'',
         phone:'',
-        photo:'',
-        username:''
+        // photo:'',
+        username:'',
+        realname:''
       },
       rules: {
         avatarImg: [
@@ -182,17 +186,15 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let query = {
-            username:this.ruleForm.username,
             userId:this.ruleForm.id,
             phone:this.ruleForm.phone,
             photo:this.ruleForm.avatarImg,
             note:this.ruleForm.note
           }
-          exitUser(query).then(res=>{
+          exitSender(query).then(res=>{
             console.log(res)
             if(res.data.status === 0){
               this.$message.success("修改成功")
-              localStorage.setItem('lander',JSON.stringify(query))
             }else{
               this.$message.error("修改失败")
             }
@@ -230,18 +232,17 @@ export default {
     }
   },
   mounted() {
-    getUser().then(res=>{
-      console.log(res.data)
-    })
     try{
       let lander=JSON.parse(localStorage.lander);
       console.log(lander)
       if (lander!=null) {
         this.ruleForm.id=lander.id
         this.ruleForm.phone=lander.phone
-        this.ruleForm.photo=lander.photo
+        this.ruleForm.note=lander.note
+        // this.ruleForm.photo=lander.photo
+        this.ruleForm.realname=lander.realname
         this.ruleForm.username=lander.username
-        this.ruleForm.avatarImg=lander.photo
+        // this.ruleForm.avatarImg=lander.photo
       }else {
         this.$router.replace('userLogin');
       }

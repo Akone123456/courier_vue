@@ -2,17 +2,17 @@
   <div class="personCenter">
     <el-card style="width: 600px;height: 600px" shadow="hover">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="头像" prop="avatarImg">
-          <el-upload
-              class="avatar-uploader"
-              action="http://localhost:8011/admin/userinfo/upimg"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-            <img v-if="ruleForm.avatarImg" :src="ruleForm.avatarImg" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
+<!--        <el-form-item label="头像" prop="avatarImg">-->
+<!--          <el-upload-->
+<!--              class="avatar-uploader"-->
+<!--              action="http://localhost:8011/admin/userinfo/upimg"-->
+<!--              :show-file-list="false"-->
+<!--              :on-success="handleAvatarSuccess"-->
+<!--              :before-upload="beforeAvatarUpload">-->
+<!--            <img v-if="ruleForm.avatarImg" :src="ruleForm.avatarImg" class="avatar">-->
+<!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--          </el-upload>-->
+<!--        </el-form-item>-->
         <el-form-item label="账号" prop="username" style="width: 90%;">
           <el-input v-model="ruleForm.username" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
@@ -25,7 +25,7 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">修改</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
-          <el-button  @click="dialogFormVisible=true">修改密码</el-button>
+          <el-button @click="dialogFormVisible=true">修改密码</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -66,9 +66,9 @@
 </template>
 
 <script>
-import {exitUser,changePwd,getUser} from '../../../api/Consumer/Consumer'
+import {exitUser,changePwd} from '../../../api/Consumer/Consumer'
 export default {
-  name: "PersonCenter",
+  name: "AdminCenter",
   data(){
     let validateNewPass = (rule , value , callback) =>{
       if (value === ''){
@@ -129,7 +129,7 @@ export default {
       formLabelWidth: '120px',
       ruleForm:{
         id:'',
-        avatarImg:'',
+        // avatarImg:'',
         phone:'',
         photo:'',
         username:''
@@ -182,7 +182,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let query = {
-            username:this.ruleForm.username,
             userId:this.ruleForm.id,
             phone:this.ruleForm.phone,
             photo:this.ruleForm.avatarImg,
@@ -192,7 +191,6 @@ export default {
             console.log(res)
             if(res.data.status === 0){
               this.$message.success("修改成功")
-              localStorage.setItem('lander',JSON.stringify(query))
             }else{
               this.$message.error("修改失败")
             }
@@ -230,9 +228,6 @@ export default {
     }
   },
   mounted() {
-    getUser().then(res=>{
-      console.log(res.data)
-    })
     try{
       let lander=JSON.parse(localStorage.lander);
       console.log(lander)
@@ -241,7 +236,7 @@ export default {
         this.ruleForm.phone=lander.phone
         this.ruleForm.photo=lander.photo
         this.ruleForm.username=lander.username
-        this.ruleForm.avatarImg=lander.photo
+        // this.ruleForm.avatarImg=lander.photo
       }else {
         this.$router.replace('userLogin');
       }

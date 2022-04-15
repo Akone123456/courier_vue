@@ -62,12 +62,14 @@
                 this.navList = [
                     {name: '/AdminOrderList', navItem: '接单大厅', navClass: 'el-icon-bell'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
+                    {name: '/SenderCenter', navItem: '个人中心', navClass: 'el-icon-key'},
                 ];
             }else if(lander.loginType == 'admin'){
                 this.navList = [
                     {name: '/AdminSenderList', navItem: '配送员管理', navClass: 'el-icon-s-custom'},
                     {name: '/AdminUsersList', navItem: '普通用户', navClass: 'el-icon-user-solid'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
+                    {name: '/AdminCenter', navItem: '个人中心', navClass: 'el-icon-key'},
                 ];
             }else{
                 this.navList = [

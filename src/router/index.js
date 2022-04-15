@@ -99,6 +99,24 @@ const router = new VueRouter({
       }
     },
 
+    {
+      path: '/AdminCenter',
+      name: 'AdminCenter',
+      component: () => import('../views/admin/AdminCenter/AdminCenter.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
+
+    {
+      path: '/SenderCenter',
+      name: 'SenderCenter',
+      component: () => import('../views/Sender/SenderCenter/SenderCenter.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
+
 
 
 
