@@ -2,7 +2,7 @@
   <div class="personCenter">
     <el-card style="width: 600px;height: 600px" shadow="hover">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="头像" prop="avatarImg">
+        <el-form-item label="头像" prop="photo">
           <el-upload
               class="avatar-uploader"
               action="http://localhost:8011/admin/userinfo/upimg"
@@ -13,8 +13,8 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="账号" prop="username" style="width: 90%;">
-          <el-input v-model="ruleForm.username" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
+        <el-form-item label="账号" prop="userName" style="width: 90%;">
+          <el-input v-model="ruleForm.userName" clearable  placeholder="账号" disabled prefix-icon="el-icon-s-custom"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone" style="width: 90%;">
           <el-input v-model="ruleForm.phone" clearable placeholder="手机号" prefix-icon="el-icon-tickets"></el-input>
@@ -135,14 +135,14 @@ export default {
         username:''
       },
       rules: {
-        avatarImg: [
+        photo: [
           {required: true, validator: validateAttach, trigger: 'blur'},
         ],
         phone:[
           {required: true, message: '电话不能为空' , trigger: 'blur'},
           {required: true,min:11,max:11, message: '电话必须为11位' , trigger: 'blur'},
         ],
-        username:[
+        userName:[
           {required: true, message: '账号不能为空' , trigger: 'blur'},
         ]
       }
@@ -183,16 +183,15 @@ export default {
         if (valid) {
           let query = {
             username:this.ruleForm.username,
-            userId:this.ruleForm.id,
+            userId:this.ruleForm.userId,
             phone:this.ruleForm.phone,
-            photo:this.ruleForm.avatarImg,
+            photo:this.ruleForm.photo,
             note:this.ruleForm.note
           }
           exitUser(query).then(res=>{
             console.log(res)
             if(res.data.status === 0){
               this.$message.success("修改成功")
-              localStorage.setItem('lander',JSON.stringify(query))
             }else{
               this.$message.error("修改失败")
             }
@@ -207,7 +206,8 @@ export default {
     },
     handleAvatarSuccess(res){
       if (res.status === 1){
-        this.ruleForm.avatarImg =process.env.VUE_APP_BASE_URL+ res.obj
+        console.log(res)
+        this.ruleForm.photo =process.env.VUE_APP_BASE_URL+ res.obj
         this.$message.success(res.msg)
       }else {
         this.$message.error(res.msg)
@@ -230,8 +230,9 @@ export default {
     },
     getUserById(id){
       getUser(id).then(res=>{
-        if (res.data.status){
-          console.log(res.data)
+        console.log(res.data)
+        if (res.data.status === 0){
+
           this.ruleForm = res.data.data
         }
       })
@@ -240,7 +241,8 @@ export default {
   mounted() {
     try{
       let lander=JSON.parse(localStorage.lander);
-      console.log(lander)
+      // console.log(lander)
+      console.log(lander.id)
       this.getUserById(lander.id)
     }catch(e){
       this.$router.replace('userLogin');

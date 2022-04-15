@@ -116,6 +116,14 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
+    {
+      path: '/AddressManger',
+      name: 'AddressManger',
+      component: () => import('../views/userinfo/AddressManger/AddressManger.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 

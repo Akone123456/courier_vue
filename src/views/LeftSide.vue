@@ -76,6 +76,7 @@
                     {name: '/MyCenter', navItem: '基本信息', navClass: 'el-icon-s-custom'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
                     {name: '/PersonCenter', navItem: '个人中心', navClass: 'el-icon-key'},
+                    {name: '/AddressManger', navItem: '地址管理', navClass: 'el-icon-key'},
                 ];
             }
 
