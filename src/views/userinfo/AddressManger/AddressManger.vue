@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import {addressByPage,addAddress,exitAddress,delAddress,getAddressById} from "../../../api/AddressManger/AddressMange";
+import {addressByPage,addAddress,exitAddress,delAddress,getAddressById} from "../../../api/Consumer/AddressManger/AddressMange";
 
 export default {
   name: "AddressManger",

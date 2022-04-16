@@ -1,6 +1,6 @@
 // 用户请求
 
-import axios from "../axios";
+import axios from "../../axios";
 
 /**
  * 分页查询
@@ -41,6 +41,20 @@ export const exitAddress = (query)=>{
     })
 }
 
+
+/**
+ * 删除地址
+ * @param query
+ * @returns {*}
+ */
+export const delAddress = (query)=>{
+    return axios.request({
+        url: '/address/delete',
+        method:'post',
+        data:query
+    })
+}
+
 /**
  * 根据用户id和地址id获取单个地址
  * @param query
@@ -51,6 +65,18 @@ export const getAddressById = (query)=>{
         url: '/address/single',
         method:'post',
         data:query
+    })
+}
+
+/**
+ * 根据用户id获取地址
+ * @param query
+ * @returns {*}
+ */
+export const getAddressByUserId = (query)=>{
+    return axios.request({
+        url: '/address/get/'+query,
+        method:'get',
     })
 }
 
