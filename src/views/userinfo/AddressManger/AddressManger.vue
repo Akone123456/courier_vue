@@ -133,10 +133,10 @@
         </el-form-item>
         <el-form-item label="默认地址" prop="isDefault" >
           <el-select v-model="dialogForm.form.isDefault" clearable placeholder="默认地址">
-            <el-option label="是" value='1'></el-option>
-            <el-option label="不是" value='0'></el-option>
+            <el-option label="是" value = "1" ></el-option>
+            <el-option label="不是" value="0"></el-option>
           </el-select>
-      </el-form-item>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
         <el-button @click="cancelDialog('ruleForm')">取 消</el-button>
@@ -163,7 +163,7 @@ export default {
           city:'',
           address:'',
           label:'',
-          isDefault:''
+          isDefault:0
         }
       },
       userId:null,
@@ -206,7 +206,10 @@ export default {
     updateAdd(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // this.dialogForm.form.isDefault === '是' ? this.dialogForm.form.isDefault=1:this.dialogForm.form.isDefault=0
+          console.log(this.dialogForm.form.isDefault)
+          if (this.dialogForm.form.isDefault === '是' || this.dialogForm.form.isDefault === '不是'){
+            this.dialogForm.form.isDefault === '' ? this.dialogForm.form.isDefault=null : this.dialogForm.form.isDefault === '是' ? this.dialogForm.form.isDefault= 1 : this.dialogForm.form.isDefault = 0
+          }
           let query = {
             userId:this.userId,
             ...this.dialogForm.form
@@ -237,7 +240,7 @@ export default {
           addAddress(query).then((res)=>{
             console.log(res)
             if(res.data.status === 0){
-              this.dialogFormVisible = false
+              this.dialogForm.dialogFormVisible = false
               this.$message.success(res.data.msg);
               this.pageUtil(1,this.page.pageSize)
             }else

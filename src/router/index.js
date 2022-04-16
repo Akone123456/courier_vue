@@ -124,6 +124,14 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
+    {
+      path: '/Order',
+      name: 'Order',
+      component: () => import('../views/userinfo/Order/Order.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 
