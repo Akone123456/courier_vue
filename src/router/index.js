@@ -132,6 +132,14 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
+    {
+      path: '/SenderOrder',
+      name: 'SenderOrder',
+      component: () => import('../views/Sender/Order/SenderOrder.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 

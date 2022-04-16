@@ -63,6 +63,7 @@
                     {name: '/AdminOrderList', navItem: '接单大厅', navClass: 'el-icon-bell'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
                     {name: '/SenderCenter', navItem: '个人中心', navClass: 'el-icon-key'},
+                    {name: '/SenderOrder', navItem: '我的订单', navClass: 'el-icon-key'},
                 ];
             }else if(lander.loginType == 'admin'){
                 this.navList = [
@@ -77,7 +78,7 @@
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
                     {name: '/PersonCenter', navItem: '个人中心', navClass: 'el-icon-key'},
                     {name: '/AddressManger', navItem: '地址管理', navClass: 'el-icon-key'},
-                    {name: '/Order', navItem: '订单管理', navClass: 'el-icon-key'},
+                    {name: '/Order', navItem: '我的订单', navClass: 'el-icon-key'},
                 ];
             }
 
