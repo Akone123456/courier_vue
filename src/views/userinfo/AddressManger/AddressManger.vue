@@ -95,7 +95,7 @@
               type="success" @click="exitAdd(scope.$index, scope.row)">修改</el-button>
           <el-button
               size="mini"
-              type="danger" @click="delAddress(scope.$index, scope.row)">删除</el-button>
+              type="danger" @click="delAdd(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -133,8 +133,8 @@
         </el-form-item>
         <el-form-item label="默认地址" prop="isDefault" >
           <el-select v-model="dialogForm.form.isDefault" clearable placeholder="默认地址">
-            <el-option label="是" value="1"></el-option>
-            <el-option label="不是" value="0"></el-option>
+            <el-option label="是" value='1'></el-option>
+            <el-option label="不是" value='0'></el-option>
           </el-select>
       </el-form-item>
       </el-form>
@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import {addressByPage,addAddress,exitAddress,delAddress} from "../../../api/AddressManger/AddressMange";
+import {addressByPage,addAddress,exitAddress,delAddress,getAddressById} from "../../../api/AddressManger/AddressMange";
 
 export default {
   name: "AddressManger",
@@ -201,11 +201,12 @@ export default {
     cancelDialog(formName){
       this.$refs[formName].resetFields();
       this.dialogForm.dialogFormVisible=false
+      this.dialogForm.form = {}
     },
     updateAdd(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogForm.form.isDefault === '是' ? this.dialogForm.form.isDefault='0':this.dialogForm.form.isDefault='1'
+          // this.dialogForm.form.isDefault === '是' ? this.dialogForm.form.isDefault=1:this.dialogForm.form.isDefault=0
           let query = {
             userId:this.userId,
             ...this.dialogForm.form
@@ -250,12 +251,20 @@ export default {
     },
     exitAdd(index,row){
       console.log(index,row)
-      this.dialogForm.form = row
-      row.isDefault === '1' ? row.isDefault = "是" :row.isDefault = "不是"
-      this.dialogForm.dialogFormVisible = true
-      this.dialogForm.title = "修改地址"
+      let query = {
+        addressId : row.addressId
+      }
+      getAddressById(query).then(res=>{
+        if(res.data.status === 0){
+          console.log(res.data)
+          res.data.data.isDefault === 1 ? res.data.data.isDefault = '是': res.data.data.isDefault = '不是'
+          this.dialogForm.form = res.data.data
+          this.dialogForm.title = "修改地址"
+          this.dialogForm.dialogFormVisible = true
+        }
+      })
     },
-    delAddress(index,row){
+    delAdd(index,row){
       if(!confirm("确定删除该地址吗？")){
         return 0
       }

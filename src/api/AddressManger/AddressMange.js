@@ -42,13 +42,13 @@ export const exitAddress = (query)=>{
 }
 
 /**
- * 删除地址
+ * 根据用户id和地址id获取单个地址
  * @param query
  * @returns {*}
  */
-export const delAddress = (query)=>{
+export const getAddressById = (query)=>{
     return axios.request({
-        url: '/address/delete',
+        url: '/address/single',
         method:'post',
         data:query
     })
