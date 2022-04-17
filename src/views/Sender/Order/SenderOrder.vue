@@ -279,85 +279,91 @@ export default {
       const ss = "00"
       return `${y}.${m}.${d} ${hh}:${mm}:${ss}`
     },
+    finish1(row){
+
+      if(row.orderStatus === 1){
+        this.$message.error("未接单,不可以点击完成")
+        return 0
+      }
+      if(row.orderStatus === 2){
+        this.$message.error("订单已接单,不可以点击完成")
+        return 0
+      }
+      if(row.orderStatus === 4){
+        this.$message.error("订单已完成,不可以点击完成")
+        return 0
+      }
+      if(row.orderStatus === 5){
+        this.$message.error("订单已取消,不可以点击完成")
+        return 0
+      }
+      let query = {
+        userId:this.userId,
+        orderId:row.orderId,
+        orderStatus:4
+      }
+      receiveOrder(query).then(res=>{
+        if(res.data.status === 0){
+          this.$message.success(res.data.msg)
+          this.onSubmit()
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     finish(index,row){
+      if(!confirm("确认已经完成此订单"))
+        return 0
       console.log(index,row)
       this.order = row
       this.dialogForm.dialogFormVisible =true
-        const that = this
-        this.$nextTick(() => {
-          that.canvas = document.getElementById('canvas');
-          that.context = this.canvas.getContext('2d')
-          console.log(that.context)
-          that.video = document.getElementById('video');
-          // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
-          if (navigator.mediaDevices === undefined) {
-            navigator.mediaDevices = {}
-          }
-          // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
-          // 使用getUserMedia，因为它会覆盖现有的属性。
-          // 这里，如果缺少getUserMedia属性，就添加它。
-          if (navigator.mediaDevices.getUserMedia === undefined) {
-            navigator.mediaDevices.getUserMedia = function (constraints) {
-              // 首先获取现存的getUserMedia(如果存在)
-              var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia
-              // 有些浏览器不支持，会返回错误信息
-              // 保持接口一致
-              if (!getUserMedia) {
-                return Promise.reject(new Error('getUserMedia is not implemented in this browser'))
-              }
-              // 否则，使用Promise将调用包装到旧的navigator.getUserMedia
-              return new Promise(function (resolve, reject) {
-                getUserMedia.call(navigator, constraints, resolve, reject)
-              })
+      const that = this
+      this.$nextTick(() => {
+        that.canvas = document.getElementById('canvas');
+        that.context = this.canvas.getContext('2d')
+        console.log(that.context)
+        that.video = document.getElementById('video');
+        // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+        if (navigator.mediaDevices === undefined) {
+          navigator.mediaDevices = {}
+        }
+        // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
+        // 使用getUserMedia，因为它会覆盖现有的属性。
+        // 这里，如果缺少getUserMedia属性，就添加它。
+        if (navigator.mediaDevices.getUserMedia === undefined) {
+          navigator.mediaDevices.getUserMedia = function (constraints) {
+            // 首先获取现存的getUserMedia(如果存在)
+            var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia
+            // 有些浏览器不支持，会返回错误信息
+            // 保持接口一致
+            if (!getUserMedia) {
+              return Promise.reject(new Error('getUserMedia is not implemented in this browser'))
             }
+            // 否则，使用Promise将调用包装到旧的navigator.getUserMedia
+            return new Promise(function (resolve, reject) {
+              getUserMedia.call(navigator, constraints, resolve, reject)
+            })
           }
-          var constraints = {
-            audio: false,
-            video: {width: this.videoWidth, height: this.videoHeight, transform: 'scaleX(-1)'}
+        }
+        var constraints = {
+          audio: false,
+          video: {width: this.videoWidth, height: this.videoHeight, transform: 'scaleX(-1)'}
+        }
+        navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+          // 旧的浏览器可能没有srcObject
+          if ('srcObject' in that.video) {
+            that.video.srcObject = stream
+          } else {
+            // 避免在新的浏览器中使用它，因为它正在被弃用。
+            that.video.src = window.URL.createObjectURL(stream)
           }
-          navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-            // 旧的浏览器可能没有srcObject
-            if ('srcObject' in that.video) {
-              that.video.srcObject = stream
-            } else {
-              // 避免在新的浏览器中使用它，因为它正在被弃用。
-              that.video.src = window.URL.createObjectURL(stream)
-            }
-            that.video.onloadedmetadata = function () {
-              that.video.play()
-            }
-          }).catch(err => {
-            console.log(err)
-          })
+          that.video.onloadedmetadata = function () {
+            that.video.play()
+          }
+        }).catch(err => {
+          console.log(err)
         })
-      // if(!confirm("确认已经完成此订单"))
-      //   return 0
-      // console.log(index,row)
-      // if(row.orderStatus === 1){
-      //   this.$message.error("未接单,不可以点击完成")
-      // }
-      // if(row.orderStatus === 2){
-      //   this.$message.error("订单已接单,不可以点击完成")
-      // }
-      // if(row.orderStatus === 4){
-      //   this.$message.error("订单已完成,不可以点击完成")
-      // }
-      // if(row.orderStatus === 5){
-      //   this.$message.error("订单已取消,不可以点击完成")
-      // }
-      // let query = {
-      //   userId:this.userId,
-      //   orderId:row.orderId,
-      //   orderStatus:4
-      // }
-      // receiveOrder(query).then(res=>{
-      //   if(res.data.status === 0){
-      //     this.$message.success(res.data.msg)
-      //     this.onSubmit()
-      //   }else{
-      //     this.$message.error(res.data.msg)
-      //   }
-      // })
+      })
     },
     distribution(index, row) {
       if(!confirm("确认配送此订单"))
@@ -533,7 +539,8 @@ export default {
       matchFace(query).then((res) => {
         if (res.data.status === 1) {
           this.$message.success(res.data.msg)
-
+          this.dialogForm.dialogFormVisible = false
+          this.finish1(this.order)
         } else {
           this.$message.error(res.data.msg)
         }
