@@ -532,11 +532,8 @@ export default {
       }
       matchFace(query).then((res) => {
         if (res.data.status === 1) {
-          this.$message({
-            duration: 3000,
-            message: res.data.msg,
-            type: 'success'
-          })
+          this.$message.success(res.data.msg)
+
         } else {
           this.$message.error(res.data.msg)
         }
