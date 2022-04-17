@@ -83,7 +83,7 @@
           <span v-if="row.orderStatus !== null">
             <el-button size="mini" type="primary" round v-if="row.orderStatus === 1">未接单</el-button>
             <el-button size="small" type="success" round v-else-if="row.orderStatus === 2">已接单</el-button>
-            <el-button size="small" type="success" round v-else-if="row.orderStatus === 3">配送中</el-button>
+            <el-button size="small" type="info" round v-else-if="row.orderStatus === 3">配送中</el-button>
             <el-button size="small" type="warning" round v-else-if="row.orderStatus === 4">完成订单</el-button>
             <el-button size="small" type="danger" round v-else-if ="row.orderStatus === 5">订单已取消</el-button>
           </span>
