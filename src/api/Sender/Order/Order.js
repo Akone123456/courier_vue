@@ -41,4 +41,38 @@ export const delOrder = (query)=>{
     })
 }
 
+/**
+ * 接单大厅
+ * @param query
+ * @returns {*}
+ */
+export const acceptOrder = (query)=>{
+    return axios.request({
+        url: '/order/orderHall',
+        method:'post',
+        data:query
+    })
+}
+
+/**
+ * 人脸识别
+ * @param query
+ * @returns {*}
+ */
+export const matchFace = (query)=>{
+    return axios.request({
+        url: '/order/faceMatch',
+        method:'get',
+        params:{
+            ...query
+        }
+    })
+}
+
+
+
+
+
+
+
 

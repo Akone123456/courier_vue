@@ -49,6 +49,7 @@
       <el-table-column
           sortable
           prop="courierNumber"
+          width="150"
           label="快递单号">
       </el-table-column>
       <el-table-column
@@ -82,7 +83,7 @@
           <span v-if="row.orderStatus !== null">
             <el-button size="mini" type="primary" round v-if="row.orderStatus === 1">未接单</el-button>
             <el-button size="small" type="success" round v-else-if="row.orderStatus === 2">已接单</el-button>
-            <el-button size="small" type="info" round v-else-if="row.orderStatus === 3">配送中</el-button>
+            <el-button size="small" type="success" round v-else-if="row.orderStatus === 3">配送中</el-button>
             <el-button size="small" type="warning" round v-else-if="row.orderStatus === 4">完成订单</el-button>
             <el-button size="small" type="danger" round v-else-if ="row.orderStatus === 5">订单已取消</el-button>
           </span>
@@ -137,41 +138,49 @@
         :total= page.total
         style="margin-top: 33px">
     </el-pagination>
-    <el-dialog :title="dialogForm.title" :visible.sync="dialogForm.dialogFormVisible" width="30%"
-               style="text-align: center" @close="cancelDialog('ruleForm')" >
-      <el-form :model="dialogForm.form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="取件人" prop="takeUserName">
-          <el-input  v-model="dialogForm.form.takeUserName" class="ellin" placeholder="取件人" autocomplete="off" clearable ></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input  v-model="dialogForm.form.phone"  class="ellin" placeholder="手机号" autocomplete="off" clearable ></el-input>
-        </el-form-item>
-        <el-form-item label="快递单号" prop="courierNumber">
-          <el-input  v-model="dialogForm.form.courierNumber"  class="ellin" placeholder="快递单号" autocomplete="off" clearable ></el-input>
-        </el-form-item>
-        <el-form-item label="收货地址" prop="courierAddress">
-          <el-select v-model="dialogForm.form.courierAddress" placeholder="收货地址">
-            <el-option v-for="(address,index) in addressList" :key="index" :label="address.addressDetail" :value="address.addressDetail"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="note" >
-          <el-input  v-model="dialogForm.form.note"  class="ellin" placeholder="备注" autocomplete="off" clearable ></el-input>
-        </el-form-item>
-        <el-form-item label="赏金" prop="bounty" >
-          <el-input  v-model="dialogForm.form.bounty"  class="ellin" placeholder="赏金" autocomplete="off" clearable ></el-input>
-        </el-form-item>
-      </el-form>
+    <el-dialog title="人脸识别" :visible.sync="dialogForm.dialogFormVisible" width="30%"
+               style="text-align: center">
+          <div class="container" style="text-align: center;">
+            <video id="video" width="150" height="300">  </video>
+            <p id="video_tip" >脸部识别中，请正脸看向摄像头</p>
+            <canvas id="canvas" width="480" height="320" style="display: none;"></canvas>
+            <p id="result"></p>
+          </div>
+<!--      <el-form :model="dialogForm.form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">-->
+<!--        <el-form-item label="取件人" prop="takeUserName">-->
+<!--          <el-input  v-model="dialogForm.form.takeUserName" class="ellin" placeholder="取件人" autocomplete="off" clearable ></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="手机号" prop="phone">-->
+<!--          <el-input  v-model="dialogForm.form.phone"  class="ellin" placeholder="手机号" autocomplete="off" clearable ></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="快递单号" prop="courierNumber">-->
+<!--          <el-input  v-model="dialogForm.form.courierNumber"  class="ellin" placeholder="快递单号" autocomplete="off" clearable ></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="收货地址" prop="courierAddress">-->
+<!--          <el-select v-model="dialogForm.form.courierAddress" placeholder="收货地址">-->
+<!--            <el-option v-for="(address,index) in addressList" :key="index" :label="address.addressDetail" :value="address.addressDetail"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="备注" prop="note" >-->
+<!--          <el-input  v-model="dialogForm.form.note"  class="ellin" placeholder="备注" autocomplete="off" clearable ></el-input>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="赏金" prop="bounty" >-->
+<!--          <el-input  v-model="dialogForm.form.bounty"  class="ellin" placeholder="赏金" autocomplete="off" clearable ></el-input>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
+
       <div slot="footer" class="dialog-footer" style="text-align: center">
-        <el-button @click="cancelDialog('ruleForm')">取 消</el-button>
-        <el-button type="primary" v-show="dialogForm.title === '下单'"  @click="addOrd('ruleForm')">添加</el-button>
-        <el-button type="primary" v-show="dialogForm.title === '修改订单'" @click="updateOrd('ruleForm')">修改</el-button>
+        <el-button type="primary" @click="saveFaceData()">识别登录</el-button>
+<!--        <el-button @click="cancelDialog('ruleForm')">取 消</el-button>-->
+<!--        <el-button type="primary" v-show="dialogForm.title === '下单'"  @click="addOrd('ruleForm')">添加</el-button>-->
+<!--        <el-button type="primary" v-show="dialogForm.title === '修改订单'" @click="updateOrd('ruleForm')">修改</el-button>-->
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {orderByPage,receiveOrder,delOrder} from '../../../api/Sender/Order/Order'
+import {orderByPage,receiveOrder,delOrder,matchFace} from '../../../api/Sender/Order/Order'
 export default {
   name: "SenderOrder",
   data(){
@@ -203,6 +212,9 @@ export default {
           }
         }]
       },
+      video: null,
+      canvas : null,
+      context : null,
       dialogForm:{
         dialogFormVisible:false,
         title:'',
@@ -214,6 +226,9 @@ export default {
           bounty:'',
           courierNumber:''
         }
+      },
+      faceData:{
+        img:''
       },
       userId:null,
       listSelect:{
@@ -265,34 +280,40 @@ export default {
     },
     finish(index,row){
       console.log(index,row)
-      if(row.orderStatus === 1){
-        this.$message.error("未接单,不可以点击完成")
-      }
-      if(row.orderStatus === 2){
-        this.$message.error("订单已接单,不可以点击完成")
-      }
-      if(row.orderStatus === 4){
-        this.$message.error("订单已完成,不可以点击完成")
-      }
-      if(row.orderStatus === 5){
-        this.$message.error("订单已取消,不可以点击完成")
-      }
-      let query = {
-        userId:this.userId,
-        orderId:row.orderId,
-        orderStatus:row.orderStatus
-      }
-      receiveOrder(query).then(res=>{
-        if(res.data.status === 0){
-          this.$message.success(res.data.msg)
-          this.onSubmit()
-        }else{
-          this.$message.error(res.data.msg)
-        }
-      })
+      this.dialogForm.dialogFormVisible =true
+      // if(!confirm("确认已经完成此订单"))
+      //   return 0
+      // console.log(index,row)
+      // if(row.orderStatus === 1){
+      //   this.$message.error("未接单,不可以点击完成")
+      // }
+      // if(row.orderStatus === 2){
+      //   this.$message.error("订单已接单,不可以点击完成")
+      // }
+      // if(row.orderStatus === 4){
+      //   this.$message.error("订单已完成,不可以点击完成")
+      // }
+      // if(row.orderStatus === 5){
+      //   this.$message.error("订单已取消,不可以点击完成")
+      // }
+      // let query = {
+      //   userId:this.userId,
+      //   orderId:row.orderId,
+      //   orderStatus:4
+      // }
+      // receiveOrder(query).then(res=>{
+      //   if(res.data.status === 0){
+      //     this.$message.success(res.data.msg)
+      //     this.onSubmit()
+      //   }else{
+      //     this.$message.error(res.data.msg)
+      //   }
+      // })
     },
-    distribution(index,row){
-      console.log(index,row)
+    distribution(index, row) {
+      if(!confirm("确认配送此订单"))
+        return 0
+
       if(row.orderStatus === 1){
         this.$message.error("未接单,不可以配送")
         return 0;
@@ -312,7 +333,7 @@ export default {
       let query = {
         userId:this.userId,
         orderId:row.orderId,
-        orderStatus:row.orderStatus
+        orderStatus:3
       }
       receiveOrder(query).then(res=>{
         if(res.data.status === 0){
@@ -451,7 +472,29 @@ export default {
         this.loading = false
       })
 
-    }
+    },
+    saveFaceData() {
+      //请求后台
+      this.faceData.img = this.getFace()
+      matchFace(this.faceData).then((res) => {
+        if (res.data.status === 1) {
+          this.$message({
+            duration: 3000,
+            message: res.data.msg,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
+    getFace() {
+      this.context.drawImage(this.video, 0, 0, 150, 150);
+      var imgSrc = this.canvas.toDataURL('image/jpg')
+      //获取完整的base64编码
+      imgSrc = imgSrc.split(',')[1];
+      return imgSrc;
+    },
   },
   mounted() {
     let lander=JSON.parse(localStorage.lander);
@@ -475,8 +518,5 @@ export default {
   width: 1200px;
   margin-left: 200px;
   margin-top: 100px;
-}
-.ellin{
-  width: 70%;
 }
 </style>

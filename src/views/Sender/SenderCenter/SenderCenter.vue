@@ -259,7 +259,6 @@ export default {
       // }
     }catch(e){
       this.$router.replace('userLogin');
-
     }
   }
 }

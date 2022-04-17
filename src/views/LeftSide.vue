@@ -79,6 +79,7 @@
                     {name: '/PersonCenter', navItem: '个人中心', navClass: 'el-icon-key'},
                     {name: '/AddressManger', navItem: '地址管理', navClass: 'el-icon-key'},
                     {name: '/Order', navItem: '我的订单', navClass: 'el-icon-key'},
+                    {name: '/OrderImmediately', navItem: '立即下单', navClass: 'el-icon-key'},
                 ];
             }
 

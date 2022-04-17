@@ -45,11 +45,12 @@ export const addOrder = (query)=>{
 /**
  * 修改订单
  * @param query
+ * @param query1
  * @returns {*}
  */
-export const exitOrder = (query)=>{
+export const exitOrder = (query,query1)=>{
     return axios.request({
-        url: '/order/cancel/'+query,
+        url: '/order/cancel/'+query+'/'+query1,
         method:'get',
     })
 }

@@ -7,7 +7,7 @@
           <el-option label="已接单" value="2"></el-option>
           <el-option label="配送中" value="3"></el-option>
           <el-option label="完成订单" value="4"></el-option>
-          <el-option label="取消订单" value="5"></el-option>
+          <el-option label="订单已取消" value="5"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -28,7 +28,7 @@
       </el-form-item>
     </el-form>
     <el-row style="margin-bottom: 10px">
-      <el-button type="success" plain @click="dialogForm.dialogFormVisible = true;dialogForm.title='下单'">添加</el-button>
+<!--      <el-button type="success" plain @click="dialogForm.dialogFormVisible = true;dialogForm.title='下单'">添加</el-button>-->
     </el-row>
     <el-table
         v-loading="loading"
@@ -102,10 +102,10 @@
         <template slot-scope="scope">
           <el-button
               size="mini"
-              type="success" @click="exitOrder(scope.$index, scope.row)">取消订单</el-button>
+              type="success" :disabled="scope.row.orderStatus!== 1" @click="exitOrder(scope.$index, scope.row)">取消订单</el-button>
           <el-button
               size="mini"
-              type="danger" @click="delOrder(scope.$index, scope.row)">删除</el-button>
+              type="danger" :disabled="scope.row.orderStatus !== 5 | scope.row.orderStatus !== 4" @click="delOrder(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -194,7 +194,7 @@ export default {
           takeUserName:'',
           phone:'',
           courierAddress:'',
-          note:'',
+          note:' ',
           bounty:'',
           courierNumber:''
         }
@@ -257,6 +257,7 @@ export default {
             userId:this.userId,
             ...this.dialogForm.form
           }
+          console.log(query)
           addOrder(query).then(res=>{
             if(res.data.status === 0){
               this.$message.success(res.data.msg)
@@ -297,7 +298,7 @@ export default {
         this.$message.error("订单已取消,不可以再次取消")
         return 0
       }
-      exitOrder(row.orderId).then(res=>{
+      exitOrder(row.orderId,this.userId).then(res=>{
         if(res.data.status === 0){
           this.$message.success(res.data.msg)
           this.onSubmit()

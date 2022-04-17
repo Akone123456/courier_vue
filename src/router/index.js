@@ -140,6 +140,14 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
+    {
+      path: '/OrderImmediately',
+      name: 'OrderImmediately',
+      component: () => import('../views/userinfo/OrderImmediately/OrderImmediately.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 
