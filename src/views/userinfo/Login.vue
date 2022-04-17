@@ -386,8 +386,6 @@
                         console.log(err)
                     })
                 })
-
-
             },
             saveFaceData() {
                 //请求后台

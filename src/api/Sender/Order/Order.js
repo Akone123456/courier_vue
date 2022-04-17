@@ -62,10 +62,8 @@ export const acceptOrder = (query)=>{
 export const matchFace = (query)=>{
     return axios.request({
         url: '/order/faceMatch',
-        method:'get',
-        params:{
-            ...query
-        }
+        method:'post',
+        data:query
     })
 }
 

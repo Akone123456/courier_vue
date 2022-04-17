@@ -141,7 +141,7 @@
     <el-dialog title="人脸识别" :visible.sync="dialogForm.dialogFormVisible" width="30%"
                style="text-align: center">
           <div class="container" style="text-align: center;">
-            <video id="video" width="150" height="300">  </video>
+            <video id="video" width="320" height="250">  </video>
             <p id="video_tip" >脸部识别中，请正脸看向摄像头</p>
             <canvas id="canvas" width="480" height="320" style="display: none;"></canvas>
             <p id="result"></p>
@@ -212,6 +212,7 @@ export default {
           }
         }]
       },
+      order:null,
       video: null,
       canvas : null,
       context : null,
@@ -280,7 +281,55 @@ export default {
     },
     finish(index,row){
       console.log(index,row)
+      this.order = row
       this.dialogForm.dialogFormVisible =true
+        const that = this
+        this.$nextTick(() => {
+          that.canvas = document.getElementById('canvas');
+          that.context = this.canvas.getContext('2d')
+          console.log(that.context)
+          that.video = document.getElementById('video');
+          // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+          if (navigator.mediaDevices === undefined) {
+            navigator.mediaDevices = {}
+          }
+          // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
+          // 使用getUserMedia，因为它会覆盖现有的属性。
+          // 这里，如果缺少getUserMedia属性，就添加它。
+          if (navigator.mediaDevices.getUserMedia === undefined) {
+            navigator.mediaDevices.getUserMedia = function (constraints) {
+              // 首先获取现存的getUserMedia(如果存在)
+              var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia
+              // 有些浏览器不支持，会返回错误信息
+              // 保持接口一致
+              if (!getUserMedia) {
+                return Promise.reject(new Error('getUserMedia is not implemented in this browser'))
+              }
+              // 否则，使用Promise将调用包装到旧的navigator.getUserMedia
+              return new Promise(function (resolve, reject) {
+                getUserMedia.call(navigator, constraints, resolve, reject)
+              })
+            }
+          }
+          var constraints = {
+            audio: false,
+            video: {width: this.videoWidth, height: this.videoHeight, transform: 'scaleX(-1)'}
+          }
+          navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+            // 旧的浏览器可能没有srcObject
+            if ('srcObject' in that.video) {
+              that.video.srcObject = stream
+            } else {
+              // 避免在新的浏览器中使用它，因为它正在被弃用。
+              that.video.src = window.URL.createObjectURL(stream)
+            }
+            that.video.onloadedmetadata = function () {
+              that.video.play()
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        })
       // if(!confirm("确认已经完成此订单"))
       //   return 0
       // console.log(index,row)
@@ -476,7 +525,12 @@ export default {
     saveFaceData() {
       //请求后台
       this.faceData.img = this.getFace()
-      matchFace(this.faceData).then((res) => {
+      let query = {
+        userId:this.userId,
+        orderId : this.order.orderId,
+        img:this.faceData.img
+      }
+      matchFace(query).then((res) => {
         if (res.data.status === 1) {
           this.$message({
             duration: 3000,
