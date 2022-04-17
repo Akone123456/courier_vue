@@ -105,7 +105,7 @@
               type="success" :disabled="scope.row.orderStatus!== 1" @click="exitOrder(scope.$index, scope.row)">取消订单</el-button>
           <el-button
               size="mini"
-              type="danger" :disabled="scope.row.orderStatus !== 5 | scope.row.orderStatus !== 4" @click="delOrder(scope.$index, scope.row)">删除</el-button>
+              type="danger"  :disabled="scope.row.orderStatus !== 4 && scope.row.orderStatus !== 5" @click="delOrder(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
