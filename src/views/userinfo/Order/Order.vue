@@ -267,10 +267,10 @@ export default {
       evaluationRules:{
         evaluation:[
           { required:true, message: '评价等级不能为空', trigger: 'blur' },
-        ],
-        commentNote:[
-          { required:true, message: '评语不能为空', trigger: 'blur' },
         ]
+        // commentNote:[
+        //   { required:true, message: '评语不能为空', trigger: 'blur' },
+        // ]
       }
     }
   },
