@@ -103,10 +103,11 @@
           <el-button
               size="mini"
               type="success" :disabled="scope.row.orderStatus!== 1" @click="exitOrder(scope.$index, scope.row)">取消订单</el-button>
+          <el-button type="primary" v-show="scope.row.evaluation === 0 "  :disabled="scope.row.orderStatus !== 4"  size="mini" @click="evaluation(scope.$index, scope.row)">评价</el-button>
           <el-button
               size="mini"
               type="danger"  :disabled="scope.row.orderStatus !== 4 && scope.row.orderStatus !== 5" @click="delOrder(scope.$index, scope.row)">删除</el-button>
-          <el-button type="primary" v-show="scope.row.evaluation === 0" size="mini" @click="evaluation(scope.$index, scope.row)">评价</el-button>
+
         </template>
       </el-table-column>
     </el-table>

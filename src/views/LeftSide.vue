@@ -62,26 +62,26 @@
                 this.navList = [
                     {name: '/AdminOrderList', navItem: '接单大厅', navClass: 'el-icon-bell'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
-                    {name: '/SenderCenter', navItem: '个人中心', navClass: 'el-icon-key'},
-                    {name: '/SenderOrder', navItem: '我的订单', navClass: 'el-icon-key'},
-                    {name: '/SenderEvaluation', navItem: '我的评价', navClass: 'el-icon-key'},
+                    {name: '/SenderCenter', navItem: '个人中心', navClass: 'el-icon-user-solid'},
+                    {name: '/SenderOrder', navItem: '我的订单', navClass: 'el-icon-menu'},
+                    {name: '/SenderEvaluation', navItem: '我的评价', navClass: 'el-icon-s-comment'},
                 ];
             }else if(lander.loginType == 'admin'){
                 this.navList = [
                     {name: '/AdminSenderList', navItem: '配送员管理', navClass: 'el-icon-s-custom'},
                     {name: '/AdminUsersList', navItem: '普通用户', navClass: 'el-icon-user-solid'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
-                    {name: '/AdminCenter', navItem: '个人中心', navClass: 'el-icon-key'},
+                    {name: '/AdminCenter', navItem: '个人中心', navClass: 'el-icon-user-solid'},
                 ];
             }else{
                 this.navList = [
                     {name: '/MyCenter', navItem: '基本信息', navClass: 'el-icon-s-custom'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
-                    {name: '/PersonCenter', navItem: '个人中心', navClass: 'el-icon-key'},
-                    {name: '/AddressManger', navItem: '地址管理', navClass: 'el-icon-key'},
-                    {name: '/Order', navItem: '我的订单', navClass: 'el-icon-key'},
-                    {name: '/OrderImmediately', navItem: '立即下单', navClass: 'el-icon-key'},
-                    {name: '/Evaluation', navItem: '我的评价', navClass: 'el-icon-key'},
+                    {name: '/PersonCenter', navItem: '个人中心', navClass: 'el-icon-user-solid'},
+                    {name: '/AddressManger', navItem: '地址管理', navClass: 'el-icon-s-promotion'},
+                    {name: '/Order', navItem: '我的订单', navClass: 'el-icon-menu'},
+                    {name: '/OrderImmediately', navItem: '立即下单', navClass: 'el-icon-shopping-cart-full'},
+                    {name: '/Evaluation', navItem: '我的评价', navClass: 'el-icon-s-comment'},
                 ];
             }
 
