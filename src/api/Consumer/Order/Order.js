@@ -68,6 +68,18 @@ export const getOrderById = (query)=>{
     })
 }
 
+/**
+ * 评价
+ * @param query
+ * @returns {*}
+ */
+export const commentSender = (query)=>{
+    return axios.request({
+        url: '/comment/sender',
+        method:'post',
+        data:query
+    })
+}
 
 
 

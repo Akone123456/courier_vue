@@ -148,7 +148,22 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
-
+    {
+      path: '/Evaluation',
+      name: 'Evaluation',
+      component: () => import('../views/userinfo/Evaluation/Evaluation.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: '/SenderEvaluation',
+      name: 'SenderEvaluation',
+      component: () => import('../views/Sender/SenderEvaluation/SenderEvaluation.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 

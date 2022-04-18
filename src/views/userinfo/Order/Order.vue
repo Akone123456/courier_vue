@@ -98,7 +98,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" >
+      <el-table-column label="操作" width="260">
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -106,6 +106,7 @@
           <el-button
               size="mini"
               type="danger"  :disabled="scope.row.orderStatus !== 4 && scope.row.orderStatus !== 5" @click="delOrder(scope.$index, scope.row)">删除</el-button>
+          <el-button type="primary" v-show="scope.row.evaluation === 0" size="mini" @click="evaluation(scope.$index, scope.row)">评价</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -149,11 +150,32 @@
         <el-button type="primary" v-show="dialogForm.title === '修改订单'" @click="updateOrd('ruleForm')">修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="评价" :visible.sync="evaluationDialog.dialogFormVisible" width="40%"
+               style="text-align: center" @close="cancelDialog('evaluationForm')" >
+      <el-form :model="evaluationDialog.form" :rules="evaluationRules" ref="evaluationForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="等级" prop="evaluation">
+          <el-radio-group v-model="evaluationDialog.form.evaluation">
+            <el-radio v-model="evaluationDialog.form.evaluation" label="1">好评</el-radio>
+            <el-radio v-model="evaluationDialog.form.evaluation" label="2">中评</el-radio>
+            <el-radio v-model="evaluationDialog.form.evaluation" label="3">差评</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item label="评语" prop="commentNote">
+          <el-input  v-model="evaluationDialog.form.commentNote"  placeholder="请输入评语" autocomplete="off" clearable ></el-input>
+        </el-form-item>
+      </el-form>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button @click="cancelValuation('evaluationForm')">取 消</el-button>
+          <el-button type="primary" @click="addValuation('evaluationForm')">提交</el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {addOrder, orderByPage, exitOrder, delOrder} from "../../../api/Consumer/Order/Order";
+import {addOrder, orderByPage, exitOrder, delOrder, commentSender} from "../../../api/Consumer/Order/Order";
 import {getAddressByUserId} from  '../../../api/Consumer/AddressManger/AddressMange'
 
 export default {
@@ -187,6 +209,13 @@ export default {
           }
         }]
       },
+      evaluationDialog:{
+        dialogFormVisible:false,
+        form:{
+          evaluation:'1',
+          commentNote:''
+        }
+      },
       dialogForm:{
         dialogFormVisible:false,
         title:'',
@@ -199,6 +228,7 @@ export default {
           courierNumber:''
         }
       },
+      row:null,
       userId:null,
       listSelect:{
         orderStatus:''
@@ -232,10 +262,49 @@ export default {
         courierNumber:[
           {required:true, message: "快递单号", trigger: 'blur' },
         ]
+      },
+      evaluationRules:{
+        evaluation:[
+          { required:true, message: '评价等级不能为空', trigger: 'blur' },
+        ],
+        commentNote:[
+          { required:true, message: '评语不能为空', trigger: 'blur' },
+        ]
       }
     }
   },
   methods:{
+    addValuation(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          let query = {
+            userId: this.userId,
+            orderId: this.row.orderId,
+            ...this.evaluationDialog.form
+          }
+          console.log(query)
+          commentSender(query).then(res=>{
+            if(res.data.status === 0){
+              this.$message.success(res.data.msg)
+              this.cancelValuation(formName)
+              this.onSubmit()
+            }else {
+              this.$message.error(res.data.msg)
+            }
+          })
+        }
+      })
+    },
+    cancelValuation(formName){
+      this.$refs[formName].resetFields();
+      this.evaluationDialog.dialogFormVisible=false
+      this.evaluationDialog.form = {}
+    },
+    evaluation(index,row){
+      console.log(index,row)
+      this.row = row
+      this.evaluationDialog.dialogFormVisible = true
+    },
     dateToDay (originVal){
       console.log(originVal)
       const dt = new Date(originVal)
@@ -358,6 +427,7 @@ export default {
         endTime:this.timeSelect === null ? '':this.dateToDay(this.timeSelect[1])
       };
       orderByPage(query).then(res=>{
+        console.log(res.data)
         if(res.data.status === 0){
           console.log(res.data)
           this.tableData = res.data.data.orderList
