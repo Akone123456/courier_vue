@@ -164,6 +164,22 @@ const router = new VueRouter({
         keepAlive: true
       }
     },
+    {
+      path: '/AdminEvaluation',
+      name: 'AdminEvaluation',
+      component: () => import('../views/admin/AdminEvaluation/AdminEvaluation.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
+    {
+      path: '/Log',
+      name: 'Log',
+      component: () => import('../views/admin/Log/Log.vue'),
+      meta: {
+        keepAlive: true
+      }
+    },
 
 
 

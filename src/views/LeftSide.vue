@@ -72,6 +72,8 @@
                     {name: '/AdminUsersList', navItem: '普通用户', navClass: 'el-icon-user-solid'},
                     {name: '/AdminUpdatePass', navItem: '修改密码', navClass: 'el-icon-key'},
                     {name: '/AdminCenter', navItem: '个人中心', navClass: 'el-icon-user-solid'},
+                    {name: '/AdminEvaluation', navItem: '评价管理', navClass: 'el-icon-s-comment'},
+                    {name: '/Log', navItem: '订单管理', navClass: 'el-icon-s-comment'},
                 ];
             }else{
                 this.navList = [
