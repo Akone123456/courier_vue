@@ -31,13 +31,13 @@
                     <el-table-column label="状态">
                         <template slot-scope="scope">
 
-                            <span v-if="scope.row.status=='1'">已启用</span>
-                            <button v-if="scope.row.status=='1'" @click="cState(scope.$index, scope.row)" type="button"
+                            <span v-if="scope.row.status=='0'">已启用</span>
+                            <button v-if="scope.row.status=='0'" @click="cState(scope.$index, scope.row)" type="button"
                                     class="el-button el-button--danger is-round"><!----><i class="el-icon-close"></i> 禁用
                             </button>
 
-                            <span v-if="scope.row.status=='0'">已禁用</span>
-                            <button v-if="scope.row.status=='0'" @click="cState(scope.$index, scope.row)" type="button"
+                            <span v-if="scope.row.status=='1'">已禁用</span>
+                            <button v-if="scope.row.status=='1'" @click="cState(scope.$index, scope.row)" type="button"
                                     class="el-button el-button--success is-round"><!----><i class="el-icon-check"></i>
                                 启用
                             </button>
