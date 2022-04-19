@@ -1,6 +1,9 @@
 <template>
   <div class="log">
     <el-form :inline="true" :model="listSelect"  class="demo-form-inline">
+      <el-form-item>
+        <el-input v-model="listSelect.orderId" placeholder="订单编号" clearable></el-input>
+      </el-form-item>
 <!--      <el-form-item>-->
 <!--        <el-select v-model="listSelect.evaluation" placeholder="订单状态" clearable>-->
 <!--          <el-option  label="好评" value="1"></el-option>-->
@@ -139,7 +142,7 @@ export default {
         }]
       },
       listSelect:{
-
+        orderId:''
       },
       page:{
         pageNum:1,

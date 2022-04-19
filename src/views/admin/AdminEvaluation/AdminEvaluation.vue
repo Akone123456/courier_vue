@@ -2,7 +2,10 @@
   <div class="evalution">
     <el-form :inline="true" :model="listSelect"  class="demo-form-inline">
       <el-form-item>
-        <el-select v-model="listSelect.evaluation" placeholder="订单状态" clearable>
+        <el-input v-model="listSelect.orderId" placeholder="订单编号" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="listSelect.evaluation" placeholder="评价状态" clearable>
           <el-option  label="好评" value="1"></el-option>
           <el-option  label="中评" value="2"></el-option>
           <el-option  label="差评" value="3"></el-option>
@@ -139,7 +142,8 @@ export default {
         }]
       },
       listSelect:{
-        evaluation:''
+        evaluation:'',
+        orderId:''
       },
       page:{
         pageNum:1,
@@ -147,7 +151,7 @@ export default {
         total:0
       },
       tableData:[],
-      timeSelect:[]
+      timeSelect:null
     }
   },
   methods:{
@@ -199,6 +203,7 @@ export default {
         startTime:this.timeSelect === null ? '':this.dateToDay(this.timeSelect[0]),
         endTime:this.timeSelect === null ? '':this.dateToDay(this.timeSelect[1])
       }
+      console.log(query)
       evaluationByPage(query).then(res=>{
         console.log(res.data)
         if(res.data.status === 0){
