@@ -26,7 +26,7 @@
                 :cell-style="{'text-align':'center'}"
                 :key="1"
                 :data="tableData"
-                :default-sort = "{prop: 'createTime'}"
+                
                 :header-cell-style="{'text-align':'center'}"
                 border
                 tooltip-effect="dark"
@@ -206,6 +206,9 @@ import {acceptOrder, receiveOrder} from '../../api/Sender/Order/Order'
             console.log(res.data)
             if(res.data.status === 0 ){
               this.tableData = res.data.data.orderList
+              console.log("----------------");
+              console.log(this.tableData);
+              console.log("----------------");
               this.page.total = res.data.data.pageTotal
             }else{
               this.$message.error(res.data.msg)

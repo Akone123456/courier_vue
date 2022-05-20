@@ -2,7 +2,7 @@
   <div class="evalution">
     <el-form :inline="true" :model="listSelect"  class="demo-form-inline">
       <el-form-item>
-        <el-select v-model="listSelect.evaluation" placeholder="订单状态" clearable>
+        <el-select v-model="listSelect.evaluation" placeholder="评价状态" clearable>
           <el-option  label="好评" value="1"></el-option>
           <el-option  label="中评" value="2"></el-option>
           <el-option  label="差评" value="3"></el-option>
